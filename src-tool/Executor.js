@@ -274,27 +274,35 @@ export default /*@__PURE__*/(function() {
           //TODO report sendName
         } 
         
+      },
+
+      initialize: function() {
+        if (Environment.isWebWorker()) {
+          //we need this workaround otherwise on firefox 10 the Executor may not run as expected.
+          //I wasn't able to create a simple test case as it seems that the number of classes involved
+          //and the loading order have an impact on the issue (so that it is possible that once built the
+          //issue will not be there)
+          //I don't want to include BrowserDetection here so that I apply the workaround on all browsers
+          setTimeout(doInit,1);
+
+          //other possible workarounds (referring to the failing test)
+          //that make the Executor run correctly:
+          // *do not include Subscription
+          // *do not include the descriptor classes (inside the library code)
+          // *set the step value to a higher value (75 and 100 are suggested values that seem to work)
+
+        } else {
+          doInit();
+        }
+      },
+
+      destroy: function() {
+        if (timer) {
+          clearInterval(timer);
+          timer = undefined;
+        }
       }
-      
    };
-   
-   if (Environment.isWebWorker()) {
-     //we need this workaround otherwise on firefox 10 the Executor may not run as expected.
-     //I wasn't able to create a simple test case as it seems that the number of classes involved
-     //and the loading order have an impact on the issue (so that it is possible that once built the
-     //issue will not be there)
-     //I don't want to include BrowserDetection here so that I apply the workaround on all browsers
-     setTimeout(doInit,1);
-     
-     //other possible workarounds (referring to the failing test)
-     //that make the Executor run correctly:
-     // *do not include Subscription
-     // *do not include the descriptor classes (inside the library code)
-     // *set the step value to a higher value (75 and 100 are suggested values that seem to work)
-     
-   } else {
-     doInit();
-   }
    
    Executor["getQueueLength"] = Executor.getQueueLength;
    Executor["packTask"] = Executor.packTask;
@@ -306,7 +314,9 @@ export default /*@__PURE__*/(function() {
    Executor["modifyAllTaskParams"] = Executor.modifyAllTaskParams;
    Executor["delayTask"] = Executor.delayTask;
    Executor["executeTask"] = Executor.executeTask;
-   
+   Executor["initialize"] = Executor.initialize;
+   Executor["destroy"] = Executor.destroy;
+
    return Executor;
 })();
 

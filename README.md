@@ -1,4 +1,10 @@
-# Lightstreamer Client SDK
+# Lightstreamer Client SDK (Custom)
+
+> :warning: **This library is not [official](https://www.npmjs.com/package/lightstreamer-client-node)!**
+> This package has some fixes related to graceful shutdown. In particular this package has additional public module
+> ExecutorCtrl, that has two public methods `initialize` and `destroy`. So, to allow you application make graceful
+> shutdown you need to manually call initialize method before start the work and then before exit, call destroy to stop
+> inner timers.
 
 Lightstreamer Client SDK enables any JavaScript application running in a web browser or in a Node.js container to communicate bidirectionally with a **Lightstreamer Server**. The API allows to subscribe to real-time data pushed by the server, to display such data, and to send any message to the server.
 

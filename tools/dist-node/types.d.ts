@@ -2018,6 +2018,11 @@ export class LightstreamerClient {
      */
     static setLoggerProvider(provider: LoggerProvider): void;
     /**
+     * Static method that allow to destroy private module Executor. It's may be necessary for graceful shutdown, because
+     * this module has inner interval that may be clear with this method.
+     */
+    static destroyExecutor(): void;
+    /**
      * A constant string representing the name of the library.
      *
      * @type String
@@ -4178,6 +4183,24 @@ export class SubscriptionListener {
      * when the frequency can no longer be determined.
      */
     onRealMaxFrequency?(frequency: string): void;
+}
+
+/**
+ * Private inner module for schedule tasks.
+ * This is small public interface for control base operations.
+ */
+export class ExecutorCtrl {
+    /**
+     * Static method that allow to initialize private module Executor. But it's not necessary, because Executor has
+     * initialization on require library. This is can be after call destroyExecutor method.
+     */
+    static initialize(): void;
+
+    /**
+     * Static method that allow to destroy private module Executor. It's may be necessary for graceful shutdown, because
+     * this module has inner interval that may be clear with this method.
+     */
+    static destroy(): void;
 }
 
 declare module 'lightstreamer-client-node';

@@ -59,6 +59,7 @@ module.exports = {
                 "source/Subscription",
                 "source/RemoteAppender",
                 "source/LogMessages",
+                "source/ExecutorCtrl",
 
                 /* Logging */
                 "src-log/BufferAppender",
